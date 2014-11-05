@@ -217,7 +217,7 @@ health_report(Name, After, Report) :-
 	monitor_thread/1.
 
 monitor :-
-	forall(monitor_thread(Old), collect(Old)),
+	forall(retract(monitor_thread(Old)), collect(Old)),
 	forall(target(Service),
 	       ( thread_create(monitor(Service), Id, [alias(Service.name)]),
 		 assertz(monitor_thread(Id)))
