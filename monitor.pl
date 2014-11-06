@@ -92,9 +92,7 @@ overview_table_rows([]) --> [].
 overview_table_rows([H|T]) --> overview_table_row(H), overview_table_rows(T).
 
 overview_table_row(Name-Data) -->
-	{
-
-           http_link_to_id(details, [service(Name)], HREF)
+	{ http_link_to_id(details, [service(Name)], HREF)
 	},
 	html(tr([ td(class(service), a(href(HREF),Name)),
 		  td(class(errors),  Data.errors),
