@@ -96,7 +96,7 @@ overview_table_row(Name-Data) -->
 	},
 	html(tr([ td(class(service), a(href(HREF),Name)),
 		  td(class(errors),  Data.errors),
-		  td(class(count),   Data.count),
+		  td(class(success), Data.success),
 		  td(class(min),     \time(Data.summary.min)),
 		  td(class(q1),      \time(Data.summary.q1)),
 		  td(class(mean),    \time(Data.summary.median)),
@@ -178,14 +178,14 @@ $(document).ready(function(){
 		 *	      COMPUTE		*
 		 *******************************/
 
-health(Name, _{count:Count, summary:Summary, errors:ErrorCount}) :-
+health(Name, _{success:SuccessCount, summary:Summary, errors:ErrorCount}) :-
 	target(Service),
 	Name = Service.name,
 	get_time(Now),
 	After is Now - 24*3600,
 	reports(Name, After, Reports),
-	length(Reports, Count),
 	partition(error, Reports, Errors, Ok),
+	length(Ok, SuccessCount),
 	length(Errors, ErrorCount),
 	(   Ok == []
 	->  Summary = _{min:(-), q1:(-), median:(-), q3:(-), max:(-)}
