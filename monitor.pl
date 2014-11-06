@@ -14,6 +14,7 @@
 :- use_module(library(debug)).
 :- use_module(library(apply)).
 :- use_module(stat_lists).
+:- use_module(library(http/http_error)).
 
 :- debug(health).
 
@@ -91,7 +92,9 @@ overview_table_rows([]) --> [].
 overview_table_rows([H|T]) --> overview_table_row(H), overview_table_rows(T).
 
 overview_table_row(Name-Data) -->
-	{ http_link_to_id(details, [service(Name)], HREF)
+	{
+
+           http_link_to_id(details, [service(Name)], HREF)
 	},
 	html(tr([ td(class(service), a(href(HREF),Name)),
 		  td(class(errors),  Data.errors),
@@ -187,7 +190,7 @@ health(Name, _{count:Count, summary:Summary, errors:ErrorCount}) :-
 	partition(error, Reports, Errors, Ok),
 	length(Errors, ErrorCount),
 	(   Ok == []
-	->  Summary = _{min:(-), q1:(-), mean:(-), q3:(-), max:(-)}
+	->  Summary = _{min:(-), q1:(-), median:(-), q3:(-), max:(-)}
 	;   maplist(get_dict(time), Ok, Times),
 	    msort(Times, SortedTimes),
 	    list_five_number_summary(SortedTimes, Summary)
